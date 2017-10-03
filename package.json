@@ -1,0 +1,22 @@
+{
+  "name": "skyebot",
+  "version": "1.0.0",
+  "description": "general purpose discord bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mauyeung/skyebot.git"
+  },
+  "author": "Crysilica",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mauyeung/skyebot/issues"
+  },
+  "homepage": "https://github.com/Mauyeung/skyebot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
