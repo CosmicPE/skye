@@ -10,13 +10,15 @@
     "type": "git",
     "url": "git+https://github.com/Mauyeung/skyebot.git"
   },
-  "author": "Crysilica",
+  "author": "Mauyeung",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Mauyeung/skyebot/issues"
   },
   "homepage": "https://github.com/Mauyeung/skyebot#readme",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "discord.js": "^11.2.1",
+    "request": "^2.83.0",
+    "xml2js": "^0.4.19"
   }
 }
