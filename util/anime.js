@@ -4,6 +4,7 @@ const request = require('request');
 
 const findShow = (message, args) => {
 
+	message.channel.startTyping(2);
 	let tokenpost = {
 		url: 'https://anilist.co/api/auth/access_token',
 		formData: {grant_type:'client_credentials', client_id: env.anilist_id, client_secret: env.anilist_secret}
@@ -16,9 +17,7 @@ const findShow = (message, args) => {
 			qs: {access_token: token}
 		}
 		request.get(getshows, (error, response, result) => {
-
 			let shows = JSON.parse(result);
-
 			if ('error' in shows) {
 				console.log('Error finding show');
 			} else {
@@ -31,12 +30,12 @@ const findShow = (message, args) => {
 					i++;
 				});
 				message.channel.send(('```css\n' + 'Please select a show number\n' + shownamearray + '\n```').replace(/,/g, "")).then((tempMessage) => {
+					message.channel.stopTyping();
 					message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
 						max: 1,
 						time: 15000,
 						errors: ['max', 'time'],
 					}).then((collected) => {
-						console.log(collected.first());
 						let showobject = showarray[parseInt(collected.first().content)];
 						let embededmessage = new Discord.RichEmbed(showobject)
 						.setAuthor(showobject.title_english, showobject.image_url_lge)
@@ -50,8 +49,10 @@ const findShow = (message, args) => {
 						collected.first().delete();
 						tempMessage.delete();
 						message.channel.send(embededmessage);
+						message.channel.stopTyping();
 					}).catch(() => {
 						console.log('Error selecting show number');
+						message.channel.stopTyping();
 						tempMessage.delete();
 					});
 				});

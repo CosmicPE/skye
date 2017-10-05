@@ -1,7 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const env = require('./env.json');
-const util = require('./util/anime');
+const anime_module = require('./util/anime');
+const purge_module = require('./util/purge');
 
 client.on('ready', () => {
 	console.log('bot coming online....');
@@ -10,6 +11,7 @@ client.on('ready', () => {
 });
 
 const prefix = '~';
+
 client.on('message', message => {
 	if (!message.content.startsWith(prefix)) return;
 	if (message.author.bot) return;
@@ -18,14 +20,12 @@ client.on('message', message => {
 	let args = message.content.split(' ').slice(1).join(' ');
 
 	if (message.content.startsWith(prefix + 'anime')) {
-		util.findShow(message, args);
+		anime_module.findShow(message, args);
 	} else if (message.content.startsWith(prefix + 'purge')) {
-		let messagecount = parseInt()
-	}
-});
+		purge_module.purge(message, args);
+	} else if (message.content.startsWith(prefix + 'help')) {
 
-client.on('messageDelete', message => {
-	console.log()
+	}
 });
 
 client.login(env.token);
