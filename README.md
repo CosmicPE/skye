@@ -1,2 +1,2 @@
-# skyebot
+# skye
 General purpose discord bot
