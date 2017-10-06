@@ -1,3 +1,30 @@
+const Discord = require('discord.js');
+const react = (reaction) => {
+    let reactions;
+    switch (reaction) {
+        case 'confused':
+        reactions = confused;
+        break;
+        case 'lewd':
+        reactions = lewd;
+        break;
+        case 'pout':
+        reactions = pout;
+        break;
+        case 'smug':
+        reactions = smug;
+        break;
+        case 'cry':
+        reactions = cry;
+        break;
+    }
+    let random = Math.floor(Math.random() * reactions.length);
+    let embededmessage = new Discord.RichEmbed()
+    .setColor('#be92ff')
+    .setImage(reactions[random]);
+    return embededmessage;
+}
+
 const confused = [
     "http://i.imgur.com/RCotXAK.png",
     "http://i.imgur.com/yN5cwQq.jpg",
@@ -196,9 +223,5 @@ const cry = [
 ]
 
 module.exports = {
-    pout,
-    cry,
-    lewd,
-    smug,
-    confused
+    react
 }
