@@ -18,7 +18,10 @@
   "homepage": "https://github.com/Mauyeung/skyebot#readme",
   "dependencies": {
     "discord.js": "^11.2.1",
+    "fs": "0.0.1-security",
+    "node-opus": "^0.2.7",
     "request": "^2.83.0",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "ytdl-core": "^0.17.1"
   }
 }

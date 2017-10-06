@@ -1,12 +1,10 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const env = require('./env.json');
-const anime_module = require('./util/anime');
-const purge_module = require('./util/purge');
 
 client.on('ready', () => {
 	console.log('bot coming online....');
-	client.user.setGame('Hello world');
+	client.user.setGame('Hello world | ~help');
 	client.user.setStatus('online');
 });
 
@@ -17,14 +15,14 @@ client.on('message', message => {
 	if (message.author.bot) return;
 
 	console.log(message.content.split(' '));
-	let args = message.content.split(' ').slice(1).join(' ');
+	let args = message.content.split(' ');
+	let command = args.shift().slice(1);
 
-	if (message.content.startsWith(prefix + 'anime')) {
-		anime_module.findShow(message, args);
-	} else if (message.content.startsWith(prefix + 'purge')) {
-		purge_module.purge(message, args);
-	} else if (message.content.startsWith(prefix + 'help')) {
-
+	try {
+		let cmdFile = require('./commands/' + command);
+		cmdFile.run(client, message, args);
+	} catch (error) {
+		console.log(error);
 	}
 });
 

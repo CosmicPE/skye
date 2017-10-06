@@ -2,14 +2,13 @@ const Discord = require('discord.js');
 const env = require('../env.json');
 const request = require('request');
 
-const findShow = (message, args) => {
-
+const run = (client, message, args) => {
 	message.channel.startTyping(2);
+	args = args.join(' ');
 	let tokenpost = {
 		url: 'https://anilist.co/api/auth/access_token',
 		formData: {grant_type:'client_credentials', client_id: env.anilist_id, client_secret: env.anilist_secret}
 	};
-
 	request.post(tokenpost, (error, response, result) => {
 		let token = JSON.parse(result);
 		let getshows = {
@@ -37,7 +36,7 @@ const findShow = (message, args) => {
 						errors: ['max', 'time'],
 					}).then((collected) => {
 						let showobject = showarray[parseInt(collected.first().content)];
-						let embededmessage = new Discord.RichEmbed(showobject)
+						let embededmessage = new Discord.RichEmbed()
 						.setAuthor(showobject.title_english, showobject.image_url_lge)
 						.setDescription(showobject.description.replace(/<\/?[^>]+(>|$)/g, ""))
 						.addField('Score', showobject.average_score, true)
@@ -62,5 +61,5 @@ const findShow = (message, args) => {
 }
 
 module.exports = {
-	findShow
+	run
 }
