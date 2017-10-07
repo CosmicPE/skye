@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const env = require('./env.json');
+const env = require('./env');
 
 client.on('ready', () => {
 	console.log('bot coming online....');
@@ -38,4 +38,4 @@ client.on('message', message => {
 	}
 });
 
-client.login(env.token);
+client.login(env.token, () => {console.log(env);});

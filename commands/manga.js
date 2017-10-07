@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const env = require('../env.json');
+const env = require('../env');
 const request = require('request');
 
 const run = (client, message, args) => {
