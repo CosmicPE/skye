@@ -8,6 +8,18 @@ client.on('ready', () => {
 	client.user.setStatus('online');
 });
 
+client.on('disconnect', () => {
+	console.log('bot has disconnected....');
+});
+
+client.on('error', (error) => {
+	console.log(error);
+});
+
+client.on('debug', (info) => {
+	console.log(info);
+});
+
 const prefix = '~';
 
 client.on('message', message => {
