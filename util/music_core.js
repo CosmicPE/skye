@@ -55,6 +55,7 @@ const play = (guild, song) => {
 	}
 
 	let dispatcher = connection.playArbitraryInput(ytdl(song.url));
+	dispatcher.setVolume(0.2)
     dispatcher.on('error', (error) => {
         console.log(error);
     });
