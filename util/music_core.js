@@ -49,9 +49,7 @@ const play = (client, guild, song) => {
 	let connection = serverQueue.connection;
 
 	if (!song) {
-		//Can't disconnect or leave from voice channel cause of discord bug
-		//where if bot leaves, all dispatchers stop sending packets
-		//voiceChannel.leave();
+		voiceChannel.leave();
 		clientQueue.delete(guild);
 		return;
 	}
@@ -80,7 +78,7 @@ const stop = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (!serverQueue) {
 		console.log('There is no song currently playing on this server');
-	} else {	
+	} else {
 		serverQueue.songs = [];
 		serverQueue.connection.dispatcher.end();
 		clientQueue.delete(message.guild.id);
