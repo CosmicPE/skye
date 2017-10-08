@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+
 const react = (reaction) => {
     let reactions;
     switch (reaction) {

@@ -1,27 +1,25 @@
 const ytdl = require('ytdl-core');
-const fs = require('fs');
 
 const clientQueue = new Map();
 
 const queue = (client, message, args) => {
-
 	let serverQueue = clientQueue.get(message.guild.id);
 	let voiceChannel = message.member.voiceChannel;
-
 	if (!voiceChannel) {
+		message.channel.send('User not in voice channel');
 		console.log('User not in voice channel');
 	} else {
-		voiceChannel.join().then((connection) =>{
-			ytdl.getInfo(args[0], (error,songInfo) => {
-
-				if (error) {
-					console.log(error);
-				} else {
-					let song = {
-						title: songInfo.title,
-						url: songInfo.video_url
-					}
-					if (!serverQueue) {
+		ytdl.getInfo(args[0], (error,songInfo) => {
+			if (error) {
+				message.channel.send('Unable to play video');
+				console.log(error);
+			} else {
+				let song = {
+					title: songInfo.title,
+					url: songInfo.video_url
+				}
+				if (!serverQueue) {
+					voiceChannel.join().then((connection) => {
 						const queueConstruct = {
 							voiceChannel: voiceChannel,
 							connection: connection,
@@ -31,29 +29,28 @@ const queue = (client, message, args) => {
 						queueConstruct.songs.push(song);
 						clientQueue.set(message.guild.id, queueConstruct);
 						play(client, message.guild.id, queueConstruct.songs[0]);
-					} else {
-						serverQueue.songs.push(song);
-					}
+					}).catch((error) => {
+						message.channel.send('Unable to join voice channel');
+						console.log(error);
+					});
+				} else {
+					message.channel.send(song.title + 'added to the queue');
+					serverQueue.songs.push(song);
 				}
-			});
-		}).catch((error) => {
-			console.log(error);
+			}
 		});
 	}
 }
 
 const play = (client, guild, song) => {
-
 	let serverQueue = clientQueue.get(guild);
 	let voiceChannel = serverQueue.voiceChannel;
 	let connection = serverQueue.connection;
-
 	if (!song) {
 		voiceChannel.leave();
 		clientQueue.delete(guild);
 		return;
 	}
-
 	let dispatcher = connection.playArbitraryInput(ytdl(song.url));
 	dispatcher.setVolume(0.2)
     dispatcher.on('error', (error) => {
@@ -68,6 +65,7 @@ const play = (client, guild, song) => {
 const next = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (!serverQueue) {
+		message.channel.send('There is no song currently playing on this server');
 		console.log('There is no song currently playing on this server');
 	} else {
 		serverQueue.connection.dispatcher.end();
@@ -77,6 +75,7 @@ const next = (client, message, args) => {
 const stop = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (!serverQueue) {
+		message.channel.send('There is no song currently playing on this server');
 		console.log('There is no song currently playing on this server');
 	} else {
 		serverQueue.songs = [];
@@ -88,6 +87,7 @@ const stop = (client, message, args) => {
 const pause = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (!serverQueue) {
+		message.channel.send('There is no song currently playing on this server');
 		console.log('There is no song currently playing on this server');
 	} else {
 		serverQueue.connection.dispatcher.pause();
@@ -97,6 +97,7 @@ const pause = (client, message, args) => {
 const resume = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (!serverQueue) {
+		message.channel.send('There is no song currently playing on this server');
 		console.log('There is no song currently playing on this server');
 	} else {
 		serverQueue.connection.dispatcher.resume();

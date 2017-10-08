@@ -3,7 +3,7 @@ const env = require('../env');
 const request = require('request');
 
 const search =  (media, message, args) => {
-	message.channel.startTyping(2);
+	message.channel.startTyping();
 	args = args.join(' ');
 	let tokenpost = {
 		url: 'https://anilist.co/api/auth/access_token',
@@ -19,6 +19,8 @@ const search =  (media, message, args) => {
 			let json_results = JSON.parse(result);
 			if ('error' in json_results) {
 				console.log('Error finding ' + args);
+				message.channel.send('Error finding ' + args);
+				message.channel.stopTyping();
 			} else {
 				let media_array = [];
 				let media_name_array = [];
@@ -29,7 +31,6 @@ const search =  (media, message, args) => {
 					i++;
 				});
 				message.channel.send(('```css\n' + 'Please select the number corresponding to your search\n' + media_name_array + '\n```').replace(/,/g, "")).then((tempMessage) => {
-					message.channel.stopTyping();
 					message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
 						max: 1,
 						time: 15000,
@@ -58,6 +59,7 @@ const search =  (media, message, args) => {
 						message.channel.stopTyping();
 					}).catch(() => {
 						console.log('Error selecting search number');
+						message.channel.send('Error selecting search number');
 						message.channel.stopTyping();
 						tempMessage.delete();
 					});

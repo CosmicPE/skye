@@ -5,7 +5,7 @@ const run = (client, message, args) => {
 		let embededmessage = new Discord.RichEmbed()
 		.setAuthor('The Skyebot command cheatsheet')
 		.setThumbnail(client.user.avatarURL)
-		.setDescription('All commands are prefixed with a ~')
+		.setDescription('All commands are prefixed with a ~ \n To see more more in-depth documentation of commands, simply ~help [command]')
 		.addField('Search', 'anime	manga')
 		.addField('Reactions', 'lewd	cry	pout	confused	smug')
 		.addField('Music', 'play	stop	pause	resume	next')
@@ -22,6 +22,7 @@ const run = (client, message, args) => {
 			.setColor('#be92ff');
 			message.channel.send(embededmessage);
 		} catch (error) {
+			message.channel.send('Command ' + args[0] + 'not found');
 			console.log(error);
 		}
 	}
