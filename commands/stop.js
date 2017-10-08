@@ -4,6 +4,13 @@ const run = (client, message, args) => {
 	music_core.stop(client, message, args);
 }
 
+const help = {
+	name: 'Stop',
+	description: 'Stop currently playing song',
+	usage: '~stop'
+}
+
 module.exports = {
-	run
+	run,
+	help
 }

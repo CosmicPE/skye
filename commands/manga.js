@@ -61,6 +61,13 @@ const run = (client, message, args) => {
 	});
 }
 
+const help = {
+	name: 'Manga',
+	description: 'Provides description of a manga',
+	usage: '~manga [manga to search]'
+}
+
 module.exports = {
-	run
+	run,
+	help
 }

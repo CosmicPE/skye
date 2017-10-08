@@ -1,17 +1,32 @@
 const Discord = require('discord.js');
 
 const run = (client, message, args) => {
-	let embededmessage = new Discord.RichEmbed()
-	.setAuthor('The Skyebot command cheatsheet')
-	.setThumbnail(client.user.avatarURL)
-	.setDescription('All commands are prefixed with a ~')
-	.addField('Search', 'anime	manga')
-	.addField('Reactions', 'lewd	cry	pout	confused	smug')
-	.addField('Music', 'play	stop	pause	resume	next')
-	.setColor('#be92ff');
-	message.channel.send(embededmessage);
+	if (args.length === 0 ) {
+		let embededmessage = new Discord.RichEmbed()
+		.setAuthor('The Skyebot command cheatsheet')
+		.setThumbnail(client.user.avatarURL)
+		.setDescription('All commands are prefixed with a ~')
+		.addField('Search', 'anime	manga')
+		.addField('Reactions', 'lewd	cry	pout	confused	smug')
+		.addField('Music', 'play	stop	pause	resume	next')
+		.setColor('#be92ff');
+		message.channel.send(embededmessage);
+	} else {
+		try {
+			let command = require('./' + args[0]);
+			console.log(command);
+			let embededmessage = new Discord.RichEmbed()
+			.setAuthor(command.help.name)
+			.setDescription(command.help.description)
+			.addField('Usage', command.help.usage)
+			.setColor('#be92ff');
+			message.channel.send(embededmessage);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 }
 
 module.exports = {
-	run
+	run,
 }

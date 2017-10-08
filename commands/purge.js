@@ -22,6 +22,13 @@ const run = (client, message, args) => {
 	}
 }
 
+const help = {
+	name: 'Purge',
+	description: 'Delete x number of messages from current channel. Can also specify who\'s messages to delete',
+	usage: '~purge [number of messages] or ~purge [number of messages] [@someone]'
+}
+
 module.exports = {
-	run
+	run,
+	help
 }

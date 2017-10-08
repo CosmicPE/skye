@@ -60,6 +60,13 @@ const run = (client, message, args) => {
 	});
 }
 
+const help = {
+	name: 'Anime',
+	description: 'Provides description of an anime',
+	usage: '~anime [anime to search]'
+}
+
 module.exports = {
-	run
+	run,
+	help
 }

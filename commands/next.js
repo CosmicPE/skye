@@ -4,6 +4,13 @@ const run = (client, message, args) => {
 	music_core.next(client, message, args);
 }
 
+const help = {
+	name: 'Next',
+	description: 'Plays next song in song queue',
+	usage: '~next'
+}
+
 module.exports = {
-	run
+	run,
+	help
 }

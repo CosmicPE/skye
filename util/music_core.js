@@ -30,7 +30,7 @@ const queue = (client, message, args) => {
 						}
 						queueConstruct.songs.push(song);
 						clientQueue.set(message.guild.id, queueConstruct);
-						play(message.guild.id, queueConstruct.songs[0]);
+						play(client, message.guild.id, queueConstruct.songs[0]);
 					} else {
 						serverQueue.songs.push(song);
 					}
@@ -42,14 +42,16 @@ const queue = (client, message, args) => {
 	}
 }
 
-const play = (guild, song) => {
+const play = (client, guild, song) => {
 
 	let serverQueue = clientQueue.get(guild);
 	let voiceChannel = serverQueue.voiceChannel;
 	let connection = serverQueue.connection;
 
 	if (!song) {
-		voiceChannel.leave();
+		//Can't disconnect or leave from voice channel cause of discord bug
+		//where if bot leaves, all dispatchers stop sending packets
+		//voiceChannel.leave();
 		clientQueue.delete(guild);
 		return;
 	}
@@ -61,30 +63,46 @@ const play = (guild, song) => {
     });
     dispatcher.on('end', () => {
     	serverQueue.songs.shift();
-        play(guild, serverQueue.songs[0])
+        play(client, guild, serverQueue.songs[0])
     });
 }
 
 const next = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
-	serverQueue.connection.dispatcher.end();
+	if (!serverQueue) {
+		console.log('There is no song currently playing on this server');
+	} else {
+		serverQueue.connection.dispatcher.end();
+	}
 }
 
 const stop = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
-	serverQueue.songs = [];
-	serverQueue.connection.dispatcher.end();
-	clientQueue.delete(message.guild.id);
+	if (!serverQueue) {
+		console.log('There is no song currently playing on this server');
+	} else {	
+		serverQueue.songs = [];
+		serverQueue.connection.dispatcher.end();
+		clientQueue.delete(message.guild.id);
+	}
 }
 
 const pause = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
-	serverQueue.connection.dispatcher.pause();
+	if (!serverQueue) {
+		console.log('There is no song currently playing on this server');
+	} else {
+		serverQueue.connection.dispatcher.pause();
+	}
 }
 
 const resume = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
-	serverQueue.connection.dispatcher.resume();
+	if (!serverQueue) {
+		console.log('There is no song currently playing on this server');
+	} else {
+		serverQueue.connection.dispatcher.resume();
+	}
 }
 
 module.exports = {
