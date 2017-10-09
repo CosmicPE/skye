@@ -34,7 +34,7 @@ const queue = (client, message, args) => {
 						console.log(error);
 					});
 				} else {
-					message.channel.send(song.title + 'added to the queue');
+					message.channel.send(song.title + ' added to the queue');
 					serverQueue.songs.push(song);
 				}
 			}
