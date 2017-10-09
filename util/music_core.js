@@ -104,10 +104,29 @@ const resume = (client, message, args) => {
 	}
 }
 
+const list = (client, message, args) => {
+	let serverQueue = clientQueue.get(message.guild.id);
+	if (!serverQueue) {
+		message.channel.send('There is no song currently playing on this server');
+		console.log('There is no song currently playing on this server');
+	} else {
+		console.log(serverQueue.songs.title);
+		let song_array = [];
+		let i = 0;
+		serverQueue.songs.forEach((song) => {
+			song_array.push('[' + i + '] ' + song.title + '\n');
+			i++;
+		});
+		message.channel.send('**Current songs in queue**');
+		message.channel.send(('```css\n' + song_array + '\n```').replace(/,/g, ""));
+	}
+}
+
 module.exports = {
 	queue,
 	stop,
 	pause,
 	resume,
-	next
+	next,
+	list
 }
