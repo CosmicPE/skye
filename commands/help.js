@@ -8,7 +8,7 @@ const run = (client, message, args) => {
 		.setDescription('All commands are prefixed with a ~ \n\n To see more more in-depth documentation of commands, simply ~help [command] \n\n You can also chat with me by using the mention @Skye if you\'re bored!')
 		.addField('Search', 'anime	manga')
 		.addField('Reactions', 'lewd	cry	pout	confused	smug')
-		.addField('Music', 'play	stop	pause	resume	next')
+		.addField('Music', 'play	stop	pause	resume	next	list')
 		.setColor('#be92ff');
 		message.channel.send(embededmessage);
 	} else {
