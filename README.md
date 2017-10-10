@@ -1,7 +1,7 @@
 # skye
 A general purpose discord bot.
 
-![] (http://puu.sh/xUVNO/89cc756199.png)
+![](http://puu.sh/xUVNO/89cc756199.png)
 
 ## Getting Started
 To host this bot yourself, first clone the repository and install nodejs. 
