@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const apiai = require('apiai');
 const env = require('./env');
 
 const client = new Discord.Client();
