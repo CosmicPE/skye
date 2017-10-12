@@ -22,6 +22,7 @@
     "discord.js": "^11.2.1",
     "ffmpeg-binaries": "^3.2.2-3",
     "node-opus": "^0.2.7",
+    "prism-media": "github:hydrabolt/prism-media",
     "request": "^2.83.0",
     "ytdl-core": "^0.17.1"
   },
