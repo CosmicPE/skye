@@ -1,5 +1,6 @@
 const ENV = {
 	production: {
+		"prefix": "~",
 		"token": process.env.token,
 		"anilist_id": process.env.anilist_id,
 		"anilist_secret": process.env.anilist_secret,
@@ -11,4 +12,4 @@ const getEnv = (environment) => {
 	return environment;
 }
 
-module.exports = ENV[getEnv('production')];
+module.exports = ENV[getEnv('dev')];

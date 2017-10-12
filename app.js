@@ -19,7 +19,7 @@ client.on('error', (error) => {
 
 client.on('message', message => {
 
-	const commandPrefix = '~';
+	const commandPrefix = env.prefix;
 	const prefixMention = '<@' + client.user.id + '>';
 	const prefixes = [commandPrefix, prefixMention];
 	let prefix;
