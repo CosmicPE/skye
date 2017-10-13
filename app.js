@@ -52,4 +52,6 @@ client.on('message', message => {
 	}
 });
 
-client.login(env.token, () => {console.log(env);});
+client.login(env.token, (result) => {
+	console.log(result);
+});

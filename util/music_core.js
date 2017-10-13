@@ -26,6 +26,10 @@ const queue = (client, message, args) => {
 							}
 							handleQueue(connection, message, song);
 						});
+						let embededmessage = new Discord.RichEmbed()
+						.setColor('be92ff')
+						.setDescription(results.length + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author)
+						message.channel.send(embededmessage);
 					}).catch((error) => {
 						console.log(error);
 					});
@@ -41,6 +45,11 @@ const queue = (client, message, args) => {
 						queued_by: message.author
 					}
 					handleQueue(connection, message, song);
+					let embededmessage = new Discord.RichEmbed()
+					.setColor('be92ff')
+					.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
+					.setThumbnail(song.thumbnail);
+					message.channel.send(embededmessage);
 				}).catch((error) => {
 					youtube.searchVideos(query).then((results) => {
 						let videos = [];
@@ -63,6 +72,11 @@ const queue = (client, message, args) => {
 									queued_by: message.author
 								}
 								handleQueue(connection, message, song);
+								let embededmessage = new Discord.RichEmbed()
+								.setColor('be92ff')
+								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
+								.setThumbnail(song.thumbnail);
+								message.channel.send(embededmessage);
 								tempMessage.delete();
 								collected.first().delete();
 							}).catch((error) => {
