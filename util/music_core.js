@@ -99,7 +99,6 @@ const pause = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (serverQueue) {
 		serverQueue.connection.dispatcher.pause();
-		console.log(serverQueue.connection);
 	} else {
 		message.channel.send('There are currently no songs playing on this server');
 	}
