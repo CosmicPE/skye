@@ -18,7 +18,6 @@ const search =  (media, message, args) => {
 		request.get(get_media, (error, response, result) => {
 			let json_results = JSON.parse(result);
 			if ('error' in json_results) {
-				console.log('Error finding ' + args);
 				message.channel.send('Error finding ' + args);
 				message.channel.stopTyping();
 			} else {
@@ -58,7 +57,6 @@ const search =  (media, message, args) => {
 						message.channel.send(embededmessage);
 						message.channel.stopTyping();
 					}).catch(() => {
-						console.log('Error selecting search number');
 						message.channel.send('Error selecting search number');
 						message.channel.stopTyping();
 						tempMessage.delete();
