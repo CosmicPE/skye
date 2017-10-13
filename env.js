@@ -13,4 +13,4 @@ const getEnv = (environment) => {
 	return environment;
 }
 
-module.exports = ENV[getEnv('dev')];
+module.exports = ENV[getEnv('production')];
