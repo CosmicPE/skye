@@ -28,7 +28,8 @@ const queue = (client, message, args) => {
 						});
 						let embededmessage = new Discord.RichEmbed()
 						.setColor('be92ff')
-						.setDescription(results.length + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author)
+						.setTitle(':headphones: Queued')
+						.setDescription(results.length - 1 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author)
 						message.channel.send(embededmessage);
 					}).catch((error) => {
 						console.log(error);
@@ -47,6 +48,7 @@ const queue = (client, message, args) => {
 					handleQueue(connection, message, song);
 					let embededmessage = new Discord.RichEmbed()
 					.setColor('be92ff')
+					.setTitle(':headphones: Queued')
 					.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
 					.setThumbnail(song.thumbnail);
 					message.channel.send(embededmessage);
@@ -77,6 +79,7 @@ const queue = (client, message, args) => {
 							handleQueue(connection, message, song);
 							let embededmessage = new Discord.RichEmbed()
 							.setColor('be92ff')
+							.setTitle(':headphones: Queued')
 							.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
 							.setThumbnail(song.thumbnail);
 							message.channel.send(embededmessage);
@@ -166,6 +169,11 @@ const stop = (client, message, args) => {
 		serverQueue.songs = [];
 		serverQueue.repeat = false;
 		serverQueue.connection.dispatcher.end();
+		let embededmessage = new Discord.RichEmbed()
+		.setTitle(':headphones: Stop')
+		.setColor('be92ff')
+		.setDescription('Music player has been stopped by ' + message.author);
+		message.channel.send(embededmessage);
 	} else {
 		message.channel.send('There are currently no songs playing on this server');
 	}
@@ -175,6 +183,11 @@ const pause = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (serverQueue) {
 		serverQueue.connection.dispatcher.pause();
+		let embededmessage = new Discord.RichEmbed()
+		.setTitle(':headphones: Pause')
+		.setColor('be92ff')
+		.setDescription('Music player has been paused by ' + message.author);
+		message.channel.send(embededmessage);
 	} else {
 		message.channel.send('There are currently no songs playing on this server');
 	}
@@ -184,6 +197,11 @@ const resume = (client, message, args) => {
 	let serverQueue = clientQueue.get(message.guild.id);
 	if (serverQueue) {
 		serverQueue.connection.dispatcher.resume();
+		let embededmessage = new Discord.RichEmbed()
+		.setTitle(':headphones: Resume')
+		.setColor('be92ff')
+		.setDescription('Music player has been resumed by ' + message.author);
+		message.channel.send(embededmessage);
 	} else {
 		message.channel.send('There are currently no songs playing on this server');
 	}
@@ -199,10 +217,11 @@ const list = (client, message, args) => {
 			i++;
 		});
 		if (song_array.length) {
-			message.channel.send('**Current songs in queue**');
+			message.channel.send(':headphones: **List**\nCurrent songs in queue');
 			message.channel.send(('```css\n' + song_array + '\n```').replace(/,/g, ""));
 		} else {
 			let embededmessage = new Discord.RichEmbed()
+			.setTitle(':headphones: List')
 			.setColor('be92ff')
 			.setDescription('There are currently no songs in the queue');
 			message.channel.send(embededmessage);
@@ -218,6 +237,7 @@ const clear = (client, message, args) => {
 		if (serverQueue.songs.length) {
 			serverQueue.songs = [];
 			let embededmessage = new Discord.RichEmbed()
+			.setTitle(':headphones: Clear')
 			.setColor('be92ff')
 			.setDescription('Queue has been cleared by ' + message.author);
 			message.channel.send(embededmessage);
@@ -240,6 +260,7 @@ const remove = (client, message, args) => {
 				serverQueue.songs.splice(song_number, 1);
 				let embededmessage = new Discord.RichEmbed()
 				.setColor('be92ff')
+				.setTitle(':headphones: Remove')
 				.setDescription('Song ' + song + ' has been removed by ' + message.author);
 				message.channel.send(embededmessage);
 				list(client, message, args);
@@ -270,9 +291,9 @@ const shuffle = (client, message, args) => {
 			}
 			let embededmessage = new Discord.RichEmbed()
 			.setColor('be92ff')
+			.setTitle(':headphones: Shuffle')
 			.setDescription('Queue has been shuffled by ' + message.author);
 			message.channel.send(embededmessage);
-			list(client, message, args);
 		} else {
 			message.channel.send('There are currently no songs in queue');
 		}
@@ -287,6 +308,7 @@ const repeat = (client, message, args) => {
 		serverQueue.repeat = !serverQueue.repeat;
 		let embededmessage = new Discord.RichEmbed()
 		.setColor('be92ff')
+		.setTitle(':headphones: Repeat')
 		.setDescription('Repeat has been ' + (serverQueue.repeat ? 'enabled':'disabled') + ' by ' + message.author);
 		message.channel.send(embededmessage);
 	} else {
