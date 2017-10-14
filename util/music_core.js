@@ -36,7 +36,7 @@ const queue = (client, message, args) => {
 				}).catch((error) => {
 					console.log(error);
 				});
-			} else {
+			} else if (query.match(/(www.youtube.com|youtube.com)*watch\?v=*/)) {
 				youtube.getVideo(query).then((results) => {
 					let song = {
 						title: results.title,
@@ -51,43 +51,45 @@ const queue = (client, message, args) => {
 					.setThumbnail(song.thumbnail);
 					message.channel.send(embededmessage);
 				}).catch((error) => {
-					youtube.searchVideos(query).then((results) => {
-						let videos = [];
-						let i = 0;
-						results.forEach((video) => {
-							videos.push('[' + i + '] ' + video.title + '\n');
-							i ++;
-						});
-						message.channel.send(('```css\n' + 'Please select the number corresponding to your search\n' + videos + '\n```').replace(/,/g, "")).then((tempMessage) => {
-							message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
-								max: 1,
-								time: 15000,
-								errors: ['max', 'time'],
-							}).then((collected) => {
-								let selection = results[parseInt(collected.first().content)];
-								let song = {
-									title: selection.title,
-									url: 'https://www.youtube.com/watch?v=' + selection.id,
-									thumbnail: selection.thumbnails.high.url,
-									queued_by: message.author
-								}
-								handleQueue(connection, message, song);
-								let embededmessage = new Discord.RichEmbed()
-								.setColor('be92ff')
-								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
-								.setThumbnail(song.thumbnail);
-								message.channel.send(embededmessage);
-								tempMessage.delete();
-								collected.first().delete();
-							}).catch((error) => {
-								console.log(error);
-								message.channel.send('Error selecting search number');
-								tempMessage.delete();
-							});
-						});
-					}).catch((error) => {
-						console.log(error);
+					console.log(error);
+				});
+			} else {
+				youtube.searchVideos(query).then((results) => {
+					let videos = [];
+					let i = 0;
+					results.forEach((video) => {
+						videos.push('[' + i + '] ' + video.title + '\n');
+						i ++;
 					});
+					message.channel.send(('```css\n' + 'Please select the number corresponding to your search\n' + videos + '\n```').replace(/,/g, "")).then((tempMessage) => {
+						message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
+							max: 1,
+							time: 15000,
+							errors: ['max', 'time'],
+						}).then((collected) => {
+							let selection = results[parseInt(collected.first().content)];
+							let song = {
+								title: selection.title,
+								url: 'https://www.youtube.com/watch?v=' + selection.id,
+								thumbnail: selection.thumbnails.high.url,
+								queued_by: message.author
+							}
+							handleQueue(connection, message, song);
+							let embededmessage = new Discord.RichEmbed()
+							.setColor('be92ff')
+							.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
+							.setThumbnail(song.thumbnail);
+							message.channel.send(embededmessage);
+							tempMessage.delete();
+							collected.first().delete();
+						}).catch((error) => {
+							console.log(error);
+							message.channel.send('Error selecting number');
+							tempMessage.delete();
+						});
+					});
+				}).catch((error) => {
+					console.log(error);
 				});
 			}
 		}).catch((error) => {
@@ -105,18 +107,17 @@ const handleQueue = (connection, message, song) => {
 			voiceChannel: voiceChannel,
 			connection: connection,
 			songs: [],
-			repeat: false,
-			playing: false
+			repeat: false
 		}
 		queueConstruct.songs.push(song);
 		clientQueue.set(message.guild.id, queueConstruct);
-		play(message, message.guild.id, queueConstruct.songs[0]);
+		play(message, message.guild.id, queueConstruct.songs[0], null);
 	} else {
 		serverQueue.songs.push(song);
 	}
 }
 
-const play = (message, guild, song) => {
+const play = (message, guild, song, playingMessage) => {
 	let serverQueue = clientQueue.get(guild);
 	let voiceChannel = serverQueue.voiceChannel;
 	let connection = serverQueue.connection;
@@ -127,24 +128,27 @@ const play = (message, guild, song) => {
 		return;
 	}
 	let dispatcher = connection.playArbitraryInput(ytdl(song.url));
-	serverQueue.playing = true;
+	if (playingMessage) {
+		playingMessage.delete();
+	}
 	let embededmessage = new Discord.RichEmbed()
 	.setColor('be92ff')
 	.setTitle(':headphones: Now Playing')
 	.setDescription('[' + song.title + ']' + '(' + song.url + ')' + '\nQueued By ' + song.queued_by)
 	.setThumbnail(song.thumbnail);
-	message.channel.send(embededmessage);
-	dispatcher.setVolume(0.2);
-    dispatcher.on('error', (error) => {
-    	message.channel.send('Unable to play ' + song.title);
-        console.log(error);
-    });
-    dispatcher.on('end', (reason) => {
-		if (serverQueue.repeat) {
-	    	serverQueue.songs.push(song);
-	    }
-	    play(message, guild, serverQueue.songs[0]);
-    });
+	message.channel.send(embededmessage).then((now_playing) => {
+		dispatcher.setVolume(0.2);
+	    dispatcher.on('error', (error) => {
+	    	message.channel.send('Unable to play ' + song.title);
+	        console.log(error);
+	    });
+	    dispatcher.on('end', (reason) => {
+			if (serverQueue.repeat) {
+		    	serverQueue.songs.push(song);
+		    }
+		    play(message, guild, serverQueue.songs[0], now_playing);
+	    });
+	});
 }
 
 const next = (client, message, args) => {
