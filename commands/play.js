@@ -7,7 +7,7 @@ const run = (client, message, args) => {
 const help = {
 	name: 'Play',
 	description: 'Plays a song from YouTube. If a song is already playing, adds it to the queue',
-	usage: '~play [youtube video url]'
+	usage: '~play [youtube video url/playlist/search query]'
 }
 
 module.exports = {
