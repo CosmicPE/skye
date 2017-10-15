@@ -30,7 +30,7 @@ const queue = (client, message, args) => {
 						let embededmessage = new Discord.RichEmbed()
 						.setColor('be92ff')
 						.setTitle(':headphones: Queued')
-						.setDescription(results.length - 12 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author);
+						.setDescription(results.length - 1 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author);
 						message.channel.send(embededmessage);
 					}).catch((error) => {
 						console.log(error);
