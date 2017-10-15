@@ -27,13 +27,11 @@ const queue = (client, message, args) => {
 							}
 							handleQueue(connection, message, song);
 						});
-						if (serverQueue) {
-							let embededmessage = new Discord.RichEmbed()
-							.setColor('be92ff')
-							.setTitle(':headphones: Queued')
-							.setDescription(results.length - 12 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author);
-							message.channel.send(embededmessage);
-						}
+						let embededmessage = new Discord.RichEmbed()
+						.setColor('be92ff')
+						.setTitle(':headphones: Queued')
+						.setDescription(results.length - 12 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author);
+						message.channel.send(embededmessage);
 					}).catch((error) => {
 						console.log(error);
 					});
