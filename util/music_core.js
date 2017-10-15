@@ -60,7 +60,7 @@ const queue = (client, message, args) => {
 				});
 			} else {
 				youtube.searchVideos(query).then((results) => {
-					if (!results.length) {
+					if (results.length) {
 						let videos = [];
 						let i = 0;
 						results.forEach((video) => {
