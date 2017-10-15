@@ -8,6 +8,7 @@ const youtube = new youtubeapi(env.youtube_token);
 
 const queue = (client, message, args) => {
 	let voiceChannel = message.member.voiceChannel;
+	let serverQueue = clientQueue.get(message.guild.id);
 	let query = args.join(' ');
 	if (!voiceChannel) {
 		message.channel.send('User not in voice channel');
@@ -26,11 +27,13 @@ const queue = (client, message, args) => {
 							}
 							handleQueue(connection, message, song);
 						});
-						let embededmessage = new Discord.RichEmbed()
-						.setColor('be92ff')
-						.setTitle(':headphones: Queued')
-						.setDescription(results.length - 1 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author)
-						message.channel.send(embededmessage);
+						if (serverQueue) {
+							let embededmessage = new Discord.RichEmbed()
+							.setColor('be92ff')
+							.setTitle(':headphones: Queued')
+							.setDescription(results.length - 12 + ' songs from ' + '[' + playlist.title + ']' + '(' + query + ')' + ' added to the queue by ' + message.author);
+							message.channel.send(embededmessage);
+						}
 					}).catch((error) => {
 						console.log(error);
 					});
@@ -46,12 +49,14 @@ const queue = (client, message, args) => {
 						queued_by: message.author
 					}
 					handleQueue(connection, message, song);
-					let embededmessage = new Discord.RichEmbed()
-					.setColor('be92ff')
-					.setTitle(':headphones: Queued')
-					.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
-					.setThumbnail(song.thumbnail);
-					message.channel.send(embededmessage);
+					if (serverQueue) {
+						let embededmessage = new Discord.RichEmbed()
+						.setColor('be92ff')
+						.setTitle(':headphones: Queued')
+						.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by);
+						.setThumbnail(song.thumbnail);
+						message.channel.send(embededmessage);
+					}
 				}).catch((error) => {
 					console.log(error);
 				});
@@ -77,12 +82,14 @@ const queue = (client, message, args) => {
 								queued_by: message.author
 							}
 							handleQueue(connection, message, song);
-							let embededmessage = new Discord.RichEmbed()
-							.setColor('be92ff')
-							.setTitle(':headphones: Queued')
-							.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
-							.setThumbnail(song.thumbnail);
-							message.channel.send(embededmessage);
+							if (serverQueue) {
+								let embededmessage = new Discord.RichEmbed()
+								.setColor('be92ff')
+								.setTitle(':headphones: Queued')
+								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by);
+								.setThumbnail(song.thumbnail);
+								message.channel.send(embededmessage);
+							}
 							tempMessage.delete();
 							collected.first().delete();
 						}).catch((error) => {
@@ -130,7 +137,6 @@ const play = (message, guild, song, playingMessage) => {
 		clientQueue.delete(guild);
 		return;
 	}
-	let dispatcher = connection.playArbitraryInput(ytdl(song.url));
 	if (playingMessage) {
 		playingMessage.delete();
 	}
@@ -140,6 +146,7 @@ const play = (message, guild, song, playingMessage) => {
 	.setDescription('[' + song.title + ']' + '(' + song.url + ')' + '\nQueued By ' + song.queued_by)
 	.setThumbnail(song.thumbnail);
 	message.channel.send(embededmessage).then((now_playing) => {
+		let dispatcher = connection.playArbitraryInput(ytdl(song.url));
 		dispatcher.setVolume(0.2);
 	    dispatcher.on('error', (error) => {
 	    	message.channel.send('Unable to play ' + song.title);
