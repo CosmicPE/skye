@@ -53,7 +53,7 @@ const queue = (client, message, args) => {
 						let embededmessage = new Discord.RichEmbed()
 						.setColor('be92ff')
 						.setTitle(':headphones: Queued')
-						.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by);
+						.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
 						.setThumbnail(song.thumbnail);
 						message.channel.send(embededmessage);
 					}
@@ -86,7 +86,7 @@ const queue = (client, message, args) => {
 								let embededmessage = new Discord.RichEmbed()
 								.setColor('be92ff')
 								.setTitle(':headphones: Queued')
-								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by);
+								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
 								.setThumbnail(song.thumbnail);
 								message.channel.send(embededmessage);
 							}
