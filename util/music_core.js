@@ -60,42 +60,46 @@ const queue = (client, message, args) => {
 				});
 			} else {
 				youtube.searchVideos(query).then((results) => {
-					let videos = [];
-					let i = 0;
-					results.forEach((video) => {
-						videos.push('[' + i + '] ' + video.title + '\n');
-						i ++;
-					});
-					message.channel.send(('```css\n' + 'Please select the number corresponding to your search\n' + videos + '\n```').replace(/,/g, "")).then((tempMessage) => {
-						message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
-							max: 1,
-							time: 15000,
-							errors: ['max', 'time'],
-						}).then((collected) => {
-							let selection = results[parseInt(collected.first().content)];
-							let song = {
-								title: selection.title,
-								url: 'https://www.youtube.com/watch?v=' + selection.id,
-								thumbnail: selection.thumbnails.high.url,
-								queued_by: message.author
-							}
-							handleQueue(connection, message, song);
-							if (serverQueue) {
-								let embededmessage = new Discord.RichEmbed()
-								.setColor('be92ff')
-								.setTitle(':headphones: Queued')
-								.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
-								.setThumbnail(song.thumbnail);
-								message.channel.send(embededmessage);
-							}
-							tempMessage.delete();
-							collected.first().delete();
-						}).catch((error) => {
-							console.log(error);
-							message.channel.send('Error selecting number');
-							tempMessage.delete();
+					if (!results.length) {
+						let videos = [];
+						let i = 0;
+						results.forEach((video) => {
+							videos.push('[' + i + '] ' + video.title + '\n');
+							i ++;
 						});
-					});
+						message.channel.send(('```css\n' + 'Please select the number corresponding to your search\n' + videos + '\n```').replace(/,/g, "")).then((tempMessage) => {
+							message.channel.awaitMessages(response => !isNaN(response.content) && parseInt(response.content) < i, {
+								max: 1,
+								time: 15000,
+								errors: ['max', 'time'],
+							}).then((collected) => {
+								let selection = results[parseInt(collected.first().content)];
+								let song = {
+									title: selection.title,
+									url: 'https://www.youtube.com/watch?v=' + selection.id,
+									thumbnail: selection.thumbnails.high.url,
+									queued_by: message.author
+								}
+								handleQueue(connection, message, song);
+								if (serverQueue) {
+									let embededmessage = new Discord.RichEmbed()
+									.setColor('be92ff')
+									.setTitle(':headphones: Queued')
+									.setDescription('[' + song.title + ']' + '(' + song.url + ')' + ' added to the queue by ' + song.queued_by)
+									.setThumbnail(song.thumbnail);
+									message.channel.send(embededmessage);
+								}
+								tempMessage.delete();
+								collected.first().delete();
+							}).catch((error) => {
+								console.log(error);
+								message.channel.send('Error selecting number');
+								tempMessage.delete();
+							});
+						});
+					} else {
+						message.channel.send('Could not find song');
+					}
 				}).catch((error) => {
 					console.log(error);
 				});
