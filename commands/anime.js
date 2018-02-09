@@ -7,7 +7,7 @@ const run = (client, message, args) => {
 const help = {
 	name: 'Anime',
 	description: 'Provides description of an anime',
-	usage: '~anime [anime to search]'
+	usage: '~cumonmet [anime to search]'
 }
 
 module.exports = {
